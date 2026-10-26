@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แฟ้มสะสมผลงาน & พอร์ตโฟลิโอส่วนตัว (Personal Portfolio)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            accent: '#6366f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Typing animation cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 relative selection:bg-indigo-500 selection:text-white">
+
+    <!-- Particle Canvas Background for Hero -->
+    <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-30"></canvas>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 transition-all duration-300 glass-card border-b border-slate-200 dark:border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center space-x-2 text-xl font-bold tracking-wider gradient-text">
+                    <i class="fa-solid font-bold fa-code text-indigo-500"></i>
+                    <span>DEVPORTFOLIO</span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-4 font-medium text-sm">
+                    <a href="#home" class="px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">หน้าแรก</a>
+                    <a href="#about" class="px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">เกี่ยวกับฉัน</a>
+                    <a href="#projects" class="px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">ผลงานตระการตา</a>
+                    <a href="#tools" class="px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">เครื่องมือโต้ตอบ</a>
+                    <a href="#contact" class="px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">ติดต่อเรา</a>
+                </nav>
+
+                <!-- Actions: Dark Mode Toggle & Mobile Menu Btn -->
+                <div class="flex items-center space-x-3">
+                    <button id="themeToggle" aria-label="เปลี่ยนธีม" class="p-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:ring-2 ring-indigo-500 transition">
+                        <i id="themeIcon" class="fa-solid fa-moon"></i>
+                    </button>
+
+                    <button id="mobileMenuBtn" aria-label="เมนู" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Nav -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1 shadow-xl">
+            <a href="#home" class="mobile-link block px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-slate-800 text-base font-medium">หน้าแรก</a>
+            <a href="#about" class="mobile-link block px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-slate-800 text-base font-medium">เกี่ยวกับฉัน</a>
+            <a href="#projects" class="mobile-link block px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-slate-800 text-base font-medium">ผลงานตระการตา</a>
+            <a href="#tools" class="mobile-link block px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-slate-800 text-base font-medium">เครื่องมือโต้ตอบ</a>
+            <a href="#contact" class="mobile-link block px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-slate-800 text-base font-medium">ติดต่อเรา</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- HERO SECTION -->
+        <section id="home" class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16">
+            <div class="max-w-4xl mx-auto text-center space-y-8">
+                <!-- Profile Avatar Badge -->
+                <div class="relative inline-block">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full ring-4 ring-indigo-500/30 p-1 mx-auto overflow-hidden shadow-2xl bg-gradient-to-tr from-indigo-500 to-pink-500">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80" 
+                             alt="รูปโปรไฟล์" class="w-full h-full object-cover rounded-full"
+                             onerror="this.src='https://placehold.co/400x400/6366f1/ffffff?text=Developer'">
+                    </div>
+                    <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 px-3 py-1 bg-emerald-500 text-white text-xs font-semibold rounded-full shadow-lg flex items-center gap-1.5">
+                        <span class="w-2 h-2 bg-white rounded-full animate-ping"></span> พร้อมรับงาน
+                    </span>
+                </div>
+
+                <!-- Animated Dynamic Title -->
+                <div class="space-y-4">
+                    <h2 class="text-sm uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-semibold">ยินดีต้อนรับสู่พื้นที่สร้างสรรค์</h2>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
+                        สวัสดีครับ! ผมคือ <span class="gradient-text">นักพัฒนาเว็บมืออาชีพ</span>
+                    </h1>
+                    <p class="text-xl sm:text-2xl text-slate-600 dark:text-slate-300 font-light h-10 flex items-center justify-center">
+                        <span id="typedText" class="typing-cursor font-medium text-indigo-600 dark:text-indigo-400"></span>
+                    </p>
+                </div>
+
+                <p class="max-w-2xl mx-auto text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
+                    มุ่งมั่นออกแบบและพัฒนาดิจิทัลโซลูชันที่มีประสิทธิภาพ ตอบโจทย์ผู้ใช้งาน และเปี่ยมด้วยความคิดสร้างสรรค์ พร้อมเปลี่ยนไอเดียของคุณให้กลายเป็นความจริง
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#projects" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-medium shadow-lg hover:shadow-indigo-500/25 hover:scale-105 active:scale-95 transition">
+                        <i class="fa-solid fa-rocket mr-2"></i> ชมผลงานทั้งหมด
+                    </a>
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-105 active:scale-95 transition">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> ติดต่อพูดคุย
+                    </a>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex justify-center space-x-6 pt-6 text-slate-500 dark:text-slate-400">
+                    <a href="#" class="hover:text-indigo-500 dark:hover:text-indigo-400 text-2xl transition transform hover:scale-125" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="hover:text-indigo-500 dark:hover:text-indigo-400 text-2xl transition transform hover:scale-125" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" class="hover:text-indigo-500 dark:hover:text-indigo-400 text-2xl transition transform hover:scale-125" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-indigo-500 dark:hover:text-indigo-400 text-2xl transition transform hover:scale-125" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT ME SECTION -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">เกี่ยวกับตัวผม</h2>
+                <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400 text-lg">เรื่องราว ทักษะ และประสบการณ์การทำงานในสายงานสร้างสรรค์เว็บ</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left: Interactive Stats & Bio -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-semibold">สร้างสรรค์นวัตกรรมดิจิทัลด้วยความใส่ใจทุกรายละเอียด</h3>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        ผมมีประสบการณ์สร้างสรรค์เว็บแอปพลิเคชันมาแล้วหลายรูปแบบ ตั้งแต่แลนดิ้งเพจไปจนถึงระบบการทำงานที่ซับซ้อน ด้วยการผสมผสานเทคโนโลยี modern UI/UX และระบบหลังบ้านที่มีเสถียรภาพ
+                    </p>
+
+                    <!-- Interactive Stat Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4">
+                        <div class="glass-card p-4 rounded-xl text-center shadow-sm hover:border-indigo-500 transition">
+                            <span class="block text-3xl font-extrabold text-indigo-600 dark:text-indigo-400" id="statProjects">0</span>
+                            <span class="text-sm text-slate-500 dark:text-slate-400">โปรเจกต์สำเร็จ</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl text-center shadow-sm hover:border-indigo-500 transition">
+                            <span class="block text-3xl font-extrabold text-indigo-600 dark:text-indigo-400" id="statExperience">0</span>
+                            <span class="text-sm text-slate-500 dark:text-slate-400">ปีประสบการณ์</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl text-center shadow-sm hover:border-indigo-500 transition col-span-2 sm:col-span-1">
+                            <span class="block text-3xl font-extrabold text-indigo-600 dark:text-indigo-400" id="statClients">0</span>
+                            <span class="text-sm text-slate-500 dark:text-slate-400">ลูกค้าที่พึงพอใจ</span>
+                        </div>
+                    </div>
+
+                    <!-- Personal Info Badges -->
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-medium"><i class="fa-solid fa-location-dot text-indigo-500 mr-2"></i>กรุงเทพฯ, ประเทศไทย</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-medium"><i class="fa-solid fa-graduation-cap text-indigo-500 mr-2"></i>วิทยาการคอมพิวเตอร์</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-medium"><i class="fa-solid fa-language text-indigo-500 mr-2"></i>ไทย / อังกฤษ</span>
+                    </div>
+                </div>
+
+                <!-- Right: Skill Progress Bars -->
+                <div class="glass-card p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-indigo-500"></i> ทักษะและความชำนาญ
+                    </h3>
+
+                    <!-- Skill Item -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm font-medium">
+                            <span>Frontend (HTML / CSS / JavaScript / React)</span>
+                            <span class="text-indigo-500">92%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000 w-[92%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm font-medium">
+                            <span>Backend (Node.js / Python / Express)</span>
+                            <span class="text-indigo-500">85%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000 w-[85%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm font-medium">
+                            <span>UI/UX Design (Figma / Tailwind CSS)</span>
+                            <span class="text-indigo-500">88%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000 w-[88%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm font-medium">
+                            <span>Database & DevOps (SQL / MongoDB / Docker)</span>
+                            <span class="text-indigo-500">78%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-1000 w-[78%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS / SHOWCASE SECTION -->
+        <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">ผลงานโดดเด่น</h2>
+                <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400 text-lg">รวบรวมโปรเจกต์เด่นที่ได้รับการออกแบบและพัฒนาด้วยเทคโนโลยีสมัยใหม่</p>
+
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap justify-center gap-2 mt-8" id="projectFilters">
+                    <button data-filter="all" class="filter-btn active px-4 py-2 rounded-xl text-sm font-medium bg-indigo-600 text-white shadow-md transition">ทั้งหมด</button>
+                    <button data-filter="web" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white transition">เว็บแอปพลิเคชัน</button>
+                    <button data-filter="mobile" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white transition">โมบายแอป</button>
+                    <button data-filter="design" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white transition">UI/UX ดีไซน์</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projectsContainer">
+                <!-- Project Cards injected by JS -->
+            </div>
+        </section>
+
+        <!-- INTERACTIVE MINI-TOOLS SECTION -->
+        <section id="tools" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">เครื่องมือ & มินิแอปโต้ตอบ</h2>
+                <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400 text-lg">ทดลองใช้งานเครื่องมือย่อยในหน้านี้ได้ทันที</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Tool 1: Interactive Resume Generator Preview -->
+                <div class="glass-card p-6 rounded-2xl shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                        <h3 class="font-bold text-xl flex items-center gap-2">
+                            <i class="fa-solid fa-address-card text-indigo-500"></i> สร้างการ์ดแนะนำตัวแบบเรียลไทม์
+                        </h3>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 font-semibold px-2.5 py-1 rounded-full">Interactive Tool</span>
+                    </div>
+
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">ชื่อ-นามสกุล</label>
+                            <input type="text" id="previewName" value="สมชาย สายโค้ด" class="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">ตำแหน่งงาน</label>
+                            <input type="text" id="previewRole" value="Full-Stack Developer" class="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">สโลแกนประจำตัว</label>
+                            <input type="text" id="previewBio" value="สร้างสรรค์ซอฟต์แวร์ด้วยความหลงใหลและหัวใจ" class="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Live Card Output -->
+                    <div class="mt-4 p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 id="cardOutputName" class="text-lg font-bold">สมชาย สายโค้ด</h4>
+                                <p id="cardOutputRole" class="text-indigo-200 text-xs font-medium">Full-Stack Developer</p>
+                            </div>
+                            <i class="fa-solid fa-id-badge text-2xl opacity-75"></i>
+                        </div>
+                        <p id="cardOutputBio" class="text-xs italic text-slate-100 pt-2 border-t border-white/20">"สร้างสรรค์ซอฟต์แวร์ด้วยความหลงใหลและหัวใจ"</p>
+                    </div>
+                </div>
+
+                <!-- Tool 2: Quick Task / Project Planner -->
+                <div class="glass-card p-6 rounded-2xl shadow-xl flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-4">
+                            <h3 class="font-bold text-xl flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-indigo-500"></i> บันทึกไอเดีย/ภารกิจด่วน
+                            </h3>
+                            <span class="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 font-semibold px-2.5 py-1 rounded-full">Mini Planner</span>
+                        </div>
+
+                        <!-- Add Task Input -->
+                        <form id="todoForm" class="flex gap-2 mb-4">
+                            <input type="text" id="todoInput" placeholder="พิมพ์ไอเดียหรือสิ่งที่ต้องทำ..." required class="flex-grow px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 ring-indigo-500">
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition">เพิ่ม</button>
+                        </form>
+
+                        <!-- List Container -->
+                        <ul id="todoList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-sm">
+                            <!-- Items inserted dynamically -->
+                        </ul>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex justify-between items-center">
+                        <span id="taskCounter">0 รายการ</span>
+                        <button id="clearTasksBtn" class="hover:text-red-500 transition"><i class="fa-solid fa-trash mr-1"></i> ล้างรายการทั้งหมด</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">ส่งข้อความถึงผม</h2>
+                <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400 text-lg">มีโปรเจกต์ใหม่ คำถาม หรือข้อเสนอแนะ? สามารถกรอกแบบฟอร์มด้านล่างได้เลยครับ</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Info Cards -->
+                <div class="space-y-4 lg:col-span-1">
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4 shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-slate-500 dark:text-slate-400">อีเมล</h4>
+                            <p class="font-semibold text-base">contact@example.com</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4 shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-slate-500 dark:text-slate-400">โทรศัพท์</h4>
+                            <p class="font-semibold text-base">+66 81 234 5678</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex items-center space-x-4 shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-slate-500 dark:text-slate-400">ที่อยู่</h4>
+                            <p class="font-semibold text-base">กรุงเทพมหานคร, ประเทศไทย</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="lg:col-span-2 glass-card p-6 sm:p-8 rounded-2xl shadow-xl">
+                    <form id="contactForm" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">ชื่อของคุณ <span class="text-red-500">*</span></label>
+                                <input type="text" id="contactName" required placeholder="เช่น สมชาย ใจดี" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">อีเมลติดต่อ <span class="text-red-500">*</span></label>
+                                <input type="email" id="contactEmail" required placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">หัวข้อเรื่อง</label>
+                            <input type="text" id="contactSubject" placeholder="เช่น สอบถามราคาทำเว็บไซต์" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">ข้อความรายละเอียด <span class="text-red-500">*</span></label>
+                            <textarea id="contactMessage" rows="4" required placeholder="รายละเอียดที่ต้องการสอบถาม..." class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 ring-indigo-500 transition"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-indigo-500/30 hover:scale-[1.01] active:scale-[0.99] transition">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> ส่งข้อความทันที
+                        </button>
+                    </form>
+
+                    <!-- Feedback Box -->
+                    <div id="formFeedback" class="hidden mt-4 p-4 rounded-xl text-center text-sm font-medium"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 px-4 text-center text-sm text-slate-500 dark:text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>© 2026 Personal Portfolio Index. สงวนลิขสิทธิ์ทุกประการ.</p>
+            <p class="flex items-center gap-1">
+                สร้างด้วย <i class="fa-solid fa-heart text-red-500"></i> และความตั้งใจ
+            </p>
+        </div>
+    </footer>
+
+    <!-- MODAL FOR PROJECT DETAILS -->
+    <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div class="glass-card bg-white dark:bg-slate-900 max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="relative h-64 bg-slate-200 dark:bg-slate-800">
+                <img id="modalImg" src="" alt="Project Preview" class="w-full h-full object-cover">
+                <button id="closeModal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span id="modalCategory" class="text-xs font-semibold uppercase tracking-wider text-indigo-500 bg-indigo-50 dark:bg-indigo-950 px-3 py-1 rounded-full">Category</span>
+                    <span id="modalDate" class="text-xs text-slate-400">2026</span>
+                </div>
+                <h3 id="modalTitle" class="text-2xl font-bold">Project Title</h3>
+                <p id="modalDescription" class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">Project detail description goes here.</p>
+                <div id="modalTags" class="flex flex-wrap gap-2 pt-2"></div>
+                <div class="pt-4 flex gap-3">
+                    <a id="modalLiveLink" href="#" target="_blank" class="flex-1 text-center py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> เข้าชมเว็บไซต์จริง
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. Dark/Light Theme Switcher ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        }
+        
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                themeIcon.className = 'fa-solid fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            }
+        });
+        initTheme();
+
+        // --- 2. Mobile Navigation Toggle ---
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- 3. Dynamic Typing Effect ---
+        const words = ["Web Developer", "UI/UX Designer", "Frontend Specialist", "Problem Solver"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typedTextSpan = document.getElementById('typedText');
+
+        function typeEffect() {
+            const currentWord = words[wordIndex];
+            if (isDeleting) {
+                typedTextSpan.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedTextSpan.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 60 : 120;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+        typeEffect();
+
+        // --- 4. Counter Animation for Stats ---
+        function animateCounter(id, target, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerText = Math.floor(progress * target);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Trigger stats counter when visible
+        let animated = false;
+        window.addEventListener('scroll', () => {
+            const aboutSec = document.getElementById('about');
+            const pos = aboutSec.getBoundingClientRect().top;
+            if (pos < window.innerHeight && !animated) {
+                animateCounter('statProjects', 45, 1500);
+                animateCounter('statExperience', 5, 1200);
+                animateCounter('statClients', 30, 1500);
+                animated = true;
+            }
+        });
+
+        // --- 5. Projects Showcase Data & Filter ---
+        const projectsData = [
+            {
+                id: 1,
+                title: "E-Commerce Platform Modern UI",
+                category: "web",
+                categoryName: "เว็บแอปพลิเคชัน",
+                image: "https://images.unsplash.com/photo-1556742049-0a67965304e6?auto=format&fit=crop&w=600&q=80",
+                desc: "ระบบร้านค้าออนไลน์ดีไซน์ล้ำสมัย มีระบบตะกร้าสินค้า ชำระเงินง่าย และรองรับ Responsive 100%",
+                tags: ["React", "Tailwind CSS", "Node.js"]
+            },
+            {
+                id: 2,
+                title: "Fitness Tracker Mobile App",
+                category: "mobile",
+                categoryName: "โมบายแอป",
+                image: "https://images.unsplash.com/photo-1510519138161-5844623e641c?auto=format&fit=crop&w=600&q=80",
+                desc: "แอปพลิเคชันติดตามการออกกำลังกาย คำนวณแคลอรี และบันทึกกิจกรรมประจำวันสำหรับสายสุขภาพ",
+                tags: ["Flutter", "Firebase", "UI/UX"]
+            },
+            {
+                id: 3,
+                title: "Dashboard Analytics & CRM",
+                category: "design",
+                categoryName: "UI/UX ดีไซน์",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+                desc: "หน้าต่างแสดงผลการวิเคราะห์ข้อมูลทางธุรกิจ สถิติยอดขาย และจัดการข้อมูลลูกค้าได้อย่างมีประสิทธิภาพ",
+                tags: ["Figma", "Tailwind", "Chart.js"]
+            },
+            {
+                id: 4,
+                title: "AI Prompt Generator Web",
+                category: "web",
+                categoryName: "เว็บแอปพลิเคชัน",
+                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+                desc: "เครื่องมือช่วยสร้างคำสั่ง Prompt สำหรับปัญญาประดิษฐ์ เพิ่มความสะดวกในการทำงานร่วมกับ AI",
+                tags: ["Next.js", "OpenAI API", "Tailwind"]
+            },
+            {
+                id: 5,
+                title: "Smart Home Control App",
+                category: "mobile",
+                categoryName: "โมบายแอป",
+                image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+                desc: "แอปพลิเคชันควบคุมอุปกรณ์อัจฉริยะภายในบ้านผ่านสมาร์ทโฟนด้วยการเชื่อมต่อ IoT",
+                tags: ["React Native", "IoT", "WebSockets"]
+            },
+            {
+                id: 6,
+                title: "Creative Agency Branding",
+                category: "design",
+                categoryName: "UI/UX ดีไซน์",
+                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80",
+                desc: "งานออกแบบอัตลักษณ์องค์กรและเว็บไซต์นำเสนอผลงานสไตล์มินิมอลแต่ทรงพลัง",
+                tags: ["Branding", "Figma", "Webflow"]
+            }
+        ];
+
+        const projectsContainer = document.getElementById('projectsContainer');
+
+        function renderProjects(filter = 'all') {
+            projectsContainer.innerHTML = '';
+            const filtered = filter === 'all' ? projectsData : projectsData.filter(p => p.category === filter);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-48 overflow-hidden group">
+                            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/6366f1/ffffff?text=Project'">
+                            <span class="absolute top-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur-md">${p.categoryName}</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2 line-clamp-1">${p.title}</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${p.desc}</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${p.tags.map(t => `<span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openProjectModal(${p.id})" class="w-full py-2.5 rounded-xl border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 font-medium hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition">
+                            ดูรายละเอียด <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                projectsContainer.appendChild(card);
+            });
+        }
+        renderProjects();
+
+        // Filter Event Listeners
+        const filterBtns = document.querySelectorAll('#projectFilters button');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-indigo-600', 'text-white');
+                    b.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                });
+                btn.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                btn.classList.add('bg-indigo-600', 'text-white');
+
+                const filter = btn.getAttribute('data-filter');
+                renderProjects(filter);
+            });
+        });
+
+        // --- 6. Project Details Modal Logic ---
+        const projectModal = document.getElementById('projectModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        function openProjectModal(id) {
+            const p = projectsData.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('modalImg').src = p.image;
+            document.getElementById('modalTitle').textContent = p.title;
+            document.getElementById('modalCategory').textContent = p.categoryName;
+            document.getElementById('modalDescription').textContent = p.desc + " ออกแบบและพัฒนาเพื่อตอบโจทย์ผู้ใช้งานจริง เน้นความเร็วในการโหลดและการใช้งานที่สะดวกที่สุด";
+            
+            const modalTags = document.getElementById('modalTags');
+            modalTags.innerHTML = p.tags.map(t => `<span class="text-xs px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 font-semibold">${t}</span>`).join('');
+
+            projectModal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modalContent').classList.remove('scale-95');
+                document.getElementById('modalContent').classList.add('scale-100');
+            }, 10);
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            document.getElementById('modalContent').classList.remove('scale-100');
+            document.getElementById('modalContent').classList.add('scale-95');
+            setTimeout(() => {
+                projectModal.classList.add('hidden');
+            }, 200);
+        });
+
+        projectModal.addEventListener('click', (e) => {
+            if (e.target === projectModal) {
+                closeModalBtn.click();
+            }
+        });
+
+        // --- 7. Mini Tool 1: Real-time Profile Card Generator ---
+        const previewName = document.getElementById('previewName');
+        const previewRole = document.getElementById('previewRole');
+        const previewBio = document.getElementById('previewBio');
+
+        const cardOutputName = document.getElementById('cardOutputName');
+        const cardOutputRole = document.getElementById('cardOutputRole');
+        const cardOutputBio = document.getElementById('cardOutputBio');
+
+        previewName.addEventListener('input', (e) => cardOutputName.textContent = e.target.value || 'สมชาย สายโค้ด');
+        previewRole.addEventListener('input', (e) => cardOutputRole.textContent = e.target.value || 'Full-Stack Developer');
+        previewBio.addEventListener('input', (e) => cardOutputBio.textContent = `"${e.target.value || 'สร้างสรรค์ซอฟต์แวร์ด้วยความหลงใหลและหัวใจ'}"`);
+
+        // --- 8. Mini Tool 2: Quick Task / Idea Tracker ---
+        const todoForm = document.getElementById('todoForm');
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const taskCounter = document.getElementById('taskCounter');
+        const clearTasksBtn = document.getElementById('clearTasksBtn');
+
+        let tasks = [
+            { id: 1, text: "ออกแบบโครงสร้าง UX สำหรับพอร์ตโฟลิโอ", completed: true },
+            { id: 2, text: "ทดสอบการเชื่อมต่อ API บนหน้าเว็บ", completed: false }
+        ];
+
+        function renderTasks() {
+            todoList.innerHTML = '';
+            tasks.forEach(t => {
+                const li = document.createElement('li');
+                li.className = `flex items-center justify-between p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 transition ${t.completed ? 'opacity-60' : ''}`;
+                li.innerHTML = `
+                    <div class="flex items-center space-x-2.5 overflow-hidden">
+                        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.id})" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                        <span class="${t.completed ? 'line-through text-slate-400' : ''} truncate">${t.text}</span>
+                    </div>
+                    <button onclick="deleteTask(${t.id})" class="text-slate-400 hover:text-red-500 transition px-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                todoList.appendChild(li);
+            });
+            taskCounter.textContent = `${tasks.length} รายการ`;
+        }
+
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = todoInput.value.trim();
+            if (text) {
+                tasks.push({ id: Date.now(), text, completed: false });
+                todoInput.value = '';
+                renderTasks();
+            }
+        });
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+        }
+
+        clearTasksBtn.addEventListener('click', () => {
+            tasks = [];
+            renderTasks();
+        });
+        renderTasks();
+
+        // --- 9. Contact Form Simulation ---
+        const contactForm = document.getElementById('contactForm');
+        const formFeedback = document.getElementById('formFeedback');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            
+            formFeedback.className = "mt-4 p-4 rounded-xl text-center text-sm font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 block";
+            formFeedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> ขอบคุณครับคุณ <strong>${name}</strong> ข้อความของคุณถูกส่งเรียบร้อยแล้ว ผมจะติดต่อกลับโดยเร็วที่สุด!`;
+            
+            contactForm.reset();
+
+            setTimeout(() => {
+                formFeedback.className = "hidden";
+            }, 6000);
+        });
+
+        // --- 10. Background Canvas Particle System ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = Math.min(Math.floor(window.innerWidth / 20), 50);
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const particleColor = isDark ? '255, 255, 255' : '99, 102, 241';
+
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${particleColor}, ${p.alpha})`;
+                ctx.fill();
+
+                // Connect particles with thin lines
+                for (let j = idx + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(${particleColor}, ${0.15 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.onload = function() {
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
